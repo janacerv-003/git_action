@@ -1,4 +1,4 @@
-name: Pipeline de Datos Seguro y automatizado 
+name: Pipeline de Datos Seguro y Automatizado
 
 on:
   workflow_dispatch:
@@ -6,25 +6,25 @@ on:
       run_security_tests:
         type: boolean
         description: '¿Ejecutar Tests de Seguridad?'
-        default: true 
+        default: true
 
 jobs:
   ci_seguridad:
     name: CI & Seguridad
     runs-on: ubuntu-latest
     steps:
-      - name: Descargar codigo
+      - name: Descargar código
         uses: actions/checkout@v4
 
       - name: Crear ventas.json temporal
         run: |
           echo '{"ventas": []}' > ventas.json
 
-      - name: Validar que ventas.json sea un JSON valido
+      - name: Validar que ventas.json sea un JSON válido
         run: python3 -m json.tool ventas.json > /dev/null
 
       - name: Escaneo de Seguridad
-        if: ${{ inputs.run_security_tests == true }}
+        if: ${{ inputs.run_security_tests }}
         run: |
           python3 -c "
           print('Buscando las claves API expuestas...')
@@ -39,7 +39,7 @@ jobs:
       matrix:
         entorno: [staging, production]
     steps:
-      - name: Descargar codigo
+      - name: Descargar código
         uses: actions/checkout@v4
 
       - name: Generar reporte de ventas para ${{ matrix.entorno }}
@@ -55,12 +55,14 @@ jobs:
           path: reporte_${{ matrix.entorno }}.txt
 
   notificacion:
-    name: Notificacion de Exito
+    name: Notificación de Éxito
     needs: [ci_seguridad, procesamiento]
     runs-on: ubuntu-latest
     steps:
-      - name: Simular envio de notificacion a Discord
+      - name: Simular envío de notificación a Discord
+        env:
+          DISCORD_WEBHOOK: ${{ secrets.DISCORD_WEBHOOK }}
         run: |
-          echo "Simulando notificacion a Discord..."
-          echo "Webhook enmascarado utilizado: ${{ secrets.DISCORD_WEBHOOK }}"
+          echo "Simulando notificación a Discord..."
+          echo "Webhook configurado: ${DISCORD_WEBHOOK:+sí}"
           echo "¡El pipeline de datos se ha completado correctamente!"
