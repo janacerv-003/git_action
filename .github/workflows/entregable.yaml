@@ -17,7 +17,8 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Crear ventas.json temporal
-        run: echo '{"ventas": []}' > ventas.json
+        run: |
+          echo '{"ventas": []}' > ventas.json
 
       - name: Validar que ventas.json sea un JSON valido
         run: python3 -m json.tool ventas.json > /dev/null
