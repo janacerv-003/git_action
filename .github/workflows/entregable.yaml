@@ -1,4 +1,4 @@
-name: Pipeline de Datos Seguro y Automatizado
+name: Pipeline de Datos Seguro y automatizado 
 
 on:
   workflow_dispatch:
@@ -6,7 +6,7 @@ on:
       run_security_tests:
         type: boolean
         description: '¿Ejecutar Tests de Seguridad?'
-        default: true
+        default: true 
 
 jobs:
   ci_seguridad:
